@@ -1,0 +1,38 @@
+Amur {
+  Program = FunDecl+
+
+  FunDecl = "fn" Identifier "(" ParamDeclList? ")" "->" Type Block
+
+  ParamDeclList = ParamDecl ("," ParamDecl)*
+  ParamDecl = Identifier ":" Type
+
+  Block = "{" Statement* Expression? "}"
+
+  Statement = VarDecl | FunDecl
+
+  VarDecl = "let" Identifier "=" Expression
+
+  // --- Expressions ---
+  Expression = AddExp
+
+  AddExp = AddExp ("+" | "-") MulExp  -- plusOrMinus
+          | MulExp                    -- _
+
+  MulExp = MulExp ("*" | "/") Primary -- timesOrDiv
+          | Primary                   -- _
+
+  Primary = CallExp                   -- call
+          | Identifier                -- id
+          | Number                    -- number
+          | ("(" Expression ")")      -- parenExpr
+
+  CallExp = Identifier "(" ArgList? ")"  -- call
+  ArgList = Expression ("," Expression)*
+
+  // --- Types ---
+  Type = "i32" | "Unit"
+
+  // --- Lexical ---
+  Identifier = letter (letter | digit)*
+  Number = digit+
+}

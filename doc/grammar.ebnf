@@ -1,0 +1,43 @@
+(* Amur Language Grammar — EBNF *)
+
+Program        ::= FunDecl+
+
+FunDecl        ::= "fn" Identifier "(" ParamDeclList? ")" "->" Type Block
+
+ParamDeclList  ::= ParamDecl ("," ParamDecl)*
+
+ParamDecl      ::= Identifier ":" Type
+
+Block          ::= "{" Statement* Expression? "}"
+
+Statement      ::= VarDecl | FunDecl
+
+VarDecl        ::= "let" Identifier "=" Expression
+
+(* --- Expression Hierarchy --- *)
+
+Expression     ::= BinaryExpression | Primary
+
+BinaryExpression ::= AdditiveExpression | MultiplicativeExpression
+
+AdditiveExpression   ::= Expression ("+" | "-") Expression
+MultiplicativeExpression ::= Expression ("*" | "/") Expression
+
+Primary        ::= CallExp
+                 | Identifier
+                 | Number
+                 | "(" Expression ")"
+
+CallExp        ::= Identifier "(" ArgList? ")"
+
+ArgList        ::= Expression ("," Expression)*
+
+(* --- Types --- *)
+
+Type           ::= "i32" | "Unit"
+
+Identifier     ::= letter (letter | digit)*
+Number         ::= digit+
+
+letter         ::= ? any ASCII letter ?
+digit          ::= ? any digit 0-9 ?
